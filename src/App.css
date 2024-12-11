@@ -28,10 +28,19 @@
   color: #61dafb;
 }
 
+.App>h3 {
+  color: red;
+}
+
+.App>ul li {
+  color: red;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
