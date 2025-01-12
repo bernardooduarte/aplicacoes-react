@@ -1,0 +1,13 @@
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.App>h1 {
+  color: white;
+  font-family: Inter;
+  text-align: center;
+  padding: 5px;
+}
