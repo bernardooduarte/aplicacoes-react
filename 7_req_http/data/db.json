@@ -24,6 +24,21 @@
       "id": "6e88",
       "name": "capa de chuva",
       "price": "50.5"
+    },
+    {
+      "id": "83ee",
+      "name": "Teclado",
+      "price": "110"
+    },
+    {
+      "id": "3f51",
+      "name": "Cadeira",
+      "price": "200"
+    },
+    {
+      "id": "dc89",
+      "name": "Mouse",
+      "price": "60"
     }
   ]
 }

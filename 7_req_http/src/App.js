@@ -2,26 +2,32 @@ import "./App.css";
 
 import { useState, useEffect } from "react";
 
+// 4 - custom hook
+import { useFetch } from "./hooks/useFetch";
+
 const url = "http://localhost:3000/products";
 
 function App() {
   const [products, setProducts] = useState([]);
 
+  // 4 - custom
+  const { data: items, httpConfig } = useFetch(url);
+
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
 
-  // 1 - resgatando dados
-  useEffect(() => {
-    async function fetchData() {
-      const res = await fetch(url);
+  // // 1 - resgatando dados
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const res = await fetch(url);
 
-      const data = await res.json();
+  //     const data = await res.json();
 
-      setProducts(data);
-    }
+  //     setProducts(data);
+  //   }
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   // 2 - add de produtos
 
@@ -33,24 +39,36 @@ function App() {
       price,
     };
 
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(product),
-    });
+    // const res = await fetch(url, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(product),
+    // });
+    // // 3 - carregamento dinâmico
+
+    // const addedProduct = await res.json();
+
+    // setProducts((prevProducts) => [...prevProducts, addedProduct]);
+
+    // 5 - refatorando post
+    httpConfig(product, "POST");
+
+    setName("");
+    setPrice("");
   };
 
   return (
     <div className="App">
       <h1>Lista de Produtos</h1>
       <ul>
-        {products.map((product) => (
-          <li key={product.id}>
-            {product.name} - R$:{product.price}
-          </li>
-        ))}
+        {items &&
+          items.map((product) => (
+            <li key={product.id}>
+              {product.name} - R$:{product.price}
+            </li>
+          ))}
       </ul>
       <div>
         <div className="add-product">
