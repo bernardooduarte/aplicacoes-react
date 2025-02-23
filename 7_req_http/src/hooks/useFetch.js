@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 // 5 - refatorando post
 
@@ -10,6 +10,31 @@ export const useFetch = (url) => {
   const [config, setConfig] = useState(null);
   const [method, setMethod] = useState(null);
   const [callFetch, setCallFetch] = useState(false);
+
+  // 6 - loading
+  const [loading, setLoading] = useState(false);
+
+  // 7 - tratando erros
+  const [error, setError] = useState(null);
+
+  // 8 - removendo produtos
+
+  const removeProduct = useCallback(async (id) => {
+    try {
+      const res = await fetch(`${url}/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        throw new Error("Não foi possível deletar o produto!");
+      }
+
+      setCallFetch((prev) => !prev);
+    } catch (error) {
+      setError("Erro ao remover o produto.");
+    }
+  }, [url]);
+
 
   const httpConfig = (data, method) => {
     if (method === "POST") {
@@ -27,11 +52,23 @@ export const useFetch = (url) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(url);
 
-      const json = await res.json();
+      // 6 - loading
+      setLoading(true);
 
-      setData(json);
+      try {
+        const res = await fetch(url);
+
+        const json = await res.json();
+
+        setData(json);
+      } catch (error) {
+        console.log(error.message);
+
+        setError("Houve algum erro ao carregar os dados!")
+      }
+
+      setLoading(false);
     };
 
     fetchData();
@@ -49,10 +86,15 @@ export const useFetch = (url) => {
 
         setCallFetch(json);
       }
+
+      if (method === "DELETE" && config?.id) {
+        await removeProduct(config.id);
+      }
     };
 
     httpRequest();
-  }, [config, method, url]);
+  }, [config, method, url, removeProduct]);
 
-  return { data, httpConfig };
+
+  return { data, httpConfig, loading, error, removeProduct };
 };
